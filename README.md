@@ -12,6 +12,11 @@
 npm install || yarn install
 ```
 
+## Install dependences php
+```
+composer install
+```
+
 ## Env config
 ```
 1 - Copy and past the .env.example file
