@@ -3,28 +3,33 @@
 namespace App\Livewire\Categoria;
 
 use App\Models\Categoria;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 #[Title('Listagem de categorias')]
 class CategoriaComponent extends Component
 {
+    use WithPagination;
+
     # propriedades da classe ::
     public int $totalRegistros = 0;
+    public string $buscar = '';
 
     # propriedades do model ::
     public string $nome = '';
 
-    public function mount()
-    {
-        $this->totalRegistros = Categoria::count();
-    }
-
     public function rules()
     {
         return [
-            'nome' => 'required|min:5|max:30|unique:categorias'
+            'nome' => [
+                'required',
+                'min:5',
+                'max:30',
+                'unique:categorias'
+            ]
         ];
     }
 
@@ -38,6 +43,18 @@ class CategoriaComponent extends Component
         ];
     }
 
+    #[Computed]
+    public function categorias()
+    {
+        if ($this->buscar != '') {
+            $this->resetPage();
+        }
+
+        return Categoria::where('nome', 'like', "%{$this->buscar}%")
+            ->orderBy('id', 'desc')
+            ->paginate(5);
+    }
+
     public function submit()
     {
         $this->validate();
@@ -47,12 +64,14 @@ class CategoriaComponent extends Component
         $categoria->save();
 
         $this->dispatch('closeModal', 'criarCategoria');
+        $this->dispatch('msg', "Categoria {$categoria->nome} cadastrada com sucesso.");
 
+        $this->reset();
     }
 
     #[Layout('components.layouts.app')]
     public function render()
     {
-        return view('livewire.categoria.categoria-component', ['categorias' => Categoria::all()]);
+        return view('livewire.categoria.categoria-component');
     }
 }

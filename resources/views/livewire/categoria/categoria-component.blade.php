@@ -1,5 +1,5 @@
 <div>
-    <x-card title="Categorias ({{ $totalRegistros }})">
+    <x-card title="Categorias ({{ $this->categorias->count() }})">
         <x-slot:tools>
             <a href="#" type="button" class="btn btn-primary"
             data-toggle="modal" data-target="#criarCategoria">
@@ -17,7 +17,7 @@
             </x-slot:thead>
 
             <x-slot:tbody>
-                @foreach ($categorias as $categoria)
+                @forelse ($this->categorias as $categoria)
                     <tr>
                         <td>{{ $categoria->id }}</td>
                         <td>{{ $categoria->nome }}</td>
@@ -37,16 +37,29 @@
                             </a>
                         </td>
                     </tr>
-                @endforeach
+                @empty
+                    <tr class="text-center">
+                        <td colspan="5">
+                            <span class="text-warning">Não existem categorias cadastradas!</span>
+                        </td>
+                    </tr>
+                @endforelse
             </x-slot:tbody>
         </x-table>
+
+        <x-slot:footer>
+            <div class="float-right">
+                {{ $this->categorias->links() }}
+            </div>
+        </x-slot:footer>
     </x-card>
 
     <x-modal modalTitle="Criar categoria" modalId="criarCategoria" modalSize="modal-lg">
         <form wire:submit="submit">
             <div class="row mb-2">
                 <div class="col">
-                    <input type="text" class="form-control" placeholder="Nome categoria" wire:model="nome">
+                    <label for="nome">Nome</label>
+                    <input type="text" id="nome" class="form-control" placeholder="Nome categoria" wire:model="nome">
                     @error('nome')
                         <div class="alert alert-danger w-100 mt-2">{{ $message }}</div>
                     @enderror

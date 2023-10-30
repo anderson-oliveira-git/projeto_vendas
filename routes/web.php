@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Categoria\CategoriaComponent;
 use App\Livewire\Home\Inicio;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,13 +16,9 @@ use App\Livewire\Home\Inicio;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
+Route::get('/', Inicio::class);
 Route::get('/inicio', Inicio::class)->name('inicio');
 Route::get('/categoria', CategoriaComponent::class)->name('categoria');
