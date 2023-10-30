@@ -14,8 +14,8 @@ npm install || yarn install
 
 ## Env config
 ```
-    1 - Copy and past the .env.example file
-    2 - config database connection
+1 - Copy and past the .env.example file
+2 - config database connection
 ```
 ## key generate
 ```
